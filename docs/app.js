@@ -55,6 +55,7 @@ function connect(token) {
 
     ws.onopen = () => {
         console.log('Connected to Discord gateway');
+        identify(token); // Pass the token to identify
     };
 
     ws.onmessage = (event) => {
@@ -84,7 +85,6 @@ function handleGatewayMessage(data) {
     switch (op) {
         case OP_CODES.HELLO:
             startHeartbeat(d.heartbeat_interval);
-            identify();
             break;
         
         case OP_CODES.DISPATCH:
@@ -117,11 +117,11 @@ function startHeartbeat(interval) {
     }, interval);
 }
 
-function identify() {
+function identify(token) {
     ws.send(JSON.stringify({
         op: OP_CODES.IDENTIFY,
         d: {
-            token: tokenInput.value,
+            token: token,
             properties: {
                 $os: 'browser',
                 $browser: 'Discord Status Customizer',
