@@ -13,6 +13,7 @@ const resetStatusBtn = document.getElementById('resetStatus');
 const emojiPickerBtn = document.getElementById('emojiPicker');
 const previewStatusDot = document.getElementById('previewStatusDot');
 const previewStatus = document.getElementById('previewStatus');
+const previewName = document.getElementById('previewName');
 
 // State Management
 let ws = null;
@@ -47,6 +48,7 @@ function updatePreview() {
     const type = activityType.value;
     const text = activityText.value;
     previewStatus.textContent = text ? `${type.charAt(0) + type.slice(1).toLowerCase()} ${text}` : 'No activity';
+    previewName.textContent = 'Your Discord Name'; // Placeholder for user name
 }
 
 // WebSocket Functions
