@@ -149,6 +149,7 @@ function updatePresence() {
     };
 
     ws.send(JSON.stringify(presence));
+    console.log('Presence updated:', presence); // Log presence update
     updatePreview();
 }
 
