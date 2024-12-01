@@ -1,0 +1,161 @@
+/* Custom Dark Theme Colors */
+:root {
+    --discord-dark: #36393f;
+    --discord-darker: #2f3136;
+    --discord-darkest: #202225;
+    --discord-light: #dcddde;
+    --discord-accent: #5865f2;
+    --discord-green: #3ba55c;
+    --discord-yellow: #faa61a;
+    --discord-red: #ed4245;
+    --discord-gray: #72767d;
+}
+
+/* General Styles */
+body {
+    background-color: var(--discord-darkest) !important;
+    color: var(--discord-light) !important;
+}
+
+.bg-dark {
+    background-color: var(--discord-dark) !important;
+}
+
+.bg-darker {
+    background-color: var(--discord-darker) !important;
+}
+
+/* Form Controls */
+.form-control, .form-select {
+    border-color: var(--discord-gray);
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: var(--discord-darker) !important;
+    border-color: var(--discord-accent);
+    box-shadow: 0 0 0 0.25rem rgba(88, 101, 242, 0.25);
+    color: var(--discord-light) !important;
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: var(--discord-accent);
+    border-color: var(--discord-accent);
+}
+
+.btn-primary:hover {
+    background-color: #4752c4;
+    border-color: #4752c4;
+}
+
+.btn-outline-light:hover {
+    background-color: var(--discord-darker);
+}
+
+/* Discord Preview */
+.discord-preview {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: var(--discord-darker);
+    border-radius: 8px;
+}
+
+.discord-avatar {
+    width: 40px;
+    height: 40px;
+    background-color: var(--discord-gray);
+    border-radius: 50%;
+    position: relative;
+    margin-right: 12px;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 3px solid var(--discord-darker);
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    background-color: var(--discord-gray);
+}
+
+.status-dot.online {
+    background-color: var(--discord-green);
+}
+
+.status-dot.idle {
+    background-color: var(--discord-yellow);
+}
+
+.status-dot.dnd {
+    background-color: var(--discord-red);
+}
+
+.status-dot.invisible {
+    background-color: var(--discord-gray);
+}
+
+.discord-info {
+    flex-grow: 1;
+}
+
+.discord-name {
+    font-weight: 600;
+    color: var(--discord-light);
+    margin-bottom: 4px;
+}
+
+.discord-status {
+    color: var(--discord-gray);
+    font-size: 0.9em;
+}
+
+/* Alert Customization */
+.alert-warning {
+    background-color: rgba(250, 166, 26, 0.1);
+    border-color: var(--discord-yellow);
+    color: var(--discord-light);
+}
+
+/* Emoji Picker Customization */
+.emoji-mart {
+    background-color: var(--discord-darker) !important;
+    border-color: var(--discord-gray) !important;
+}
+
+.emoji-mart-bar {
+    border-color: var(--discord-gray) !important;
+}
+
+.emoji-mart-search input {
+    background-color: var(--discord-dark) !important;
+    border-color: var(--discord-gray) !important;
+    color: var(--discord-light) !important;
+}
+
+/* Loading Spinner */
+.spinner-border {
+    color: var(--discord-accent);
+}
+
+/* Transitions */
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.3s;
+}
+
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .card {
+        margin: 0;
+    }
+}

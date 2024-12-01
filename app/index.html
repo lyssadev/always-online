@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Status Customizer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emoji-mart@latest/css/emoji-mart.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-dark text-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card bg-dark border-light">
+                    <div class="card-header border-light">
+                        <h1 class="text-center mb-0">Discord Status Customizer</h1>
+                    </div>
+                    <div class="card-body">
+                        <!-- Security Warning -->
+                        <div class="alert alert-warning" role="alert">
+                            <h4 class="alert-heading">⚠️ Security Warning</h4>
+                            <p>This tool is for educational purposes only. Never share your Discord token with others.</p>
+                            <p class="mb-0">Your token is stored temporarily in memory and cleared when you close the page.</p>
+                        </div>
+
+                        <!-- Token Input -->
+                        <div class="mb-4" id="tokenSection">
+                            <label for="token" class="form-label">Discord Token</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control bg-dark text-light" id="token" placeholder="Enter your Discord token">
+                                <button class="btn btn-outline-light" type="button" id="toggleToken">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                            <button class="btn btn-primary mt-2" id="connectBtn">Connect</button>
+                        </div>
+
+                        <!-- Status Customization (Initially Hidden) -->
+                        <div id="statusSection" class="d-none">
+                            <!-- Status Type -->
+                            <div class="mb-3">
+                                <label class="form-label">Status Type</label>
+                                <select class="form-select bg-dark text-light" id="statusType">
+                                    <option value="online">🟢 Online</option>
+                                    <option value="idle">🌙 Idle</option>
+                                    <option value="dnd">⛔ Do Not Disturb</option>
+                                    <option value="invisible">⚫ Invisible</option>
+                                </select>
+                            </div>
+
+                            <!-- Activity Type -->
+                            <div class="mb-3">
+                                <label class="form-label">Activity Type</label>
+                                <select class="form-select bg-dark text-light" id="activityType">
+                                    <option value="PLAYING">🎮 Playing</option>
+                                    <option value="LISTENING">🎵 Listening to</option>
+                                    <option value="WATCHING">📺 Watching</option>
+                                    <option value="STREAMING">🎥 Streaming</option>
+                                    <option value="COMPETING">🏆 Competing in</option>
+                                </select>
+                            </div>
+
+                            <!-- Activity Text -->
+                            <div class="mb-3">
+                                <label class="form-label">Activity Text</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control bg-dark text-light" id="activityText" placeholder="Enter activity text">
+                                    <button class="btn btn-outline-light" type="button" id="emojiPicker">
+                                        😊
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Preview -->
+                            <div class="card bg-darker mb-3">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Preview</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="discord-preview" id="statusPreview">
+                                        <div class="discord-avatar">
+                                            <div class="status-dot" id="previewStatusDot"></div>
+                                        </div>
+                                        <div class="discord-info">
+                                            <div class="discord-name">User</div>
+                                            <div class="discord-status" id="previewStatus"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary" id="updateStatus">Update Status</button>
+                                <button class="btn btn-danger" id="resetStatus">Reset Status</button>
+                                <button class="btn btn-secondary" id="disconnectBtn">Disconnect</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
