@@ -1,75 +1,260 @@
 const { Client } = require('discord.js-selfbot-v13');
 const chalk = require('chalk');
 const moment = require('moment');
+const gradient = require('gradient-string');
+const os = require('os');
+const boxen = require('boxen');
+const ora = require('ora');
+const cliProgress = require('cli-progress');
+const figlet = require('figlet');
 
-// Initialize client
+// Initialize client with improved options
 const client = new Client({
     checkUpdate: false,
-    language: 'en-US'
+    language: 'en-US',
+    autoRedeemNitro: false,
+    captchaService: 'custom',
+    wsEventLimit: 100,
+    presence: {
+        activities: [{
+            name: "Educational Purpose",
+            type: "PLAYING"
+        }]
+    }
 });
 
-// Advanced console logging function
-function advancedLog(type, message) {
+// ASCII Art Banner
+function displayBanner() {
+    console.log('\n' + gradient.rainbow(figlet.textSync('Always Online', {
+        font: 'Big',
+        horizontalLayout: 'full'
+    })));
+    console.log(gradient.pastel('\n' + '='.repeat(80) + '\n'));
+}
+
+// Enhanced console logging function with decorations
+function advancedLog(type, message, subType = 'default') {
     const timestamp = moment().format('YYYY-MM-DD HH:mm:ss');
     const types = {
-        info: chalk.blue('INFO'),
-        success: chalk.green('SUCCESS'),
-        warning: chalk.yellow('WARNING'),
-        error: chalk.red('ERROR')
+        info: { color: chalk.blue('INFO'), icon: '🔵' },
+        success: { color: chalk.green('SUCCESS'), icon: '🟢' },
+        warning: { color: chalk.yellow('WARNING'), icon: '🟡' },
+        error: { color: chalk.red('ERROR'), icon: '🔴' },
+        system: { color: chalk.magenta('SYSTEM'), icon: '⚙️' },
+        network: { color: chalk.cyan('NETWORK'), icon: '🌐' },
+        stats: { color: chalk.white('STATS'), icon: '📊' }
     };
-    
-    console.log(`[${chalk.gray(timestamp)}] ${types[type] || types.info} ${message}`);
+
+    const decorations = {
+        default: message,
+        box: boxen(message, { padding: 1, margin: 1, borderStyle: 'round' }),
+        separator: '\n' + '─'.repeat(80) + '\n' + message + '\n' + '─'.repeat(80)
+    };
+
+    console.log(
+        `[${chalk.gray(timestamp)}] ${types[type].icon} ${types[type].color} ${decorations[subType]}`
+    );
 }
 
-// Calculate uptime
+// System monitoring functions
+function getSystemStats() {
+    const cpuUsage = os.loadavg()[0];
+    const totalMem = os.totalmem();
+    const freeMem = os.freemem();
+    const usedMem = totalMem - freeMem;
+    const memoryUsage = ((usedMem / totalMem) * 100).toFixed(2);
+    
+    return {
+        cpu: cpuUsage.toFixed(2),
+        memory: memoryUsage,
+        uptime: getUptime()
+    };
+}
+
+// Enhanced uptime calculation
 function getUptime() {
     const uptime = process.uptime();
-    const hours = Math.floor(uptime / 3600);
+    const days = Math.floor(uptime / 86400);
+    const hours = Math.floor((uptime % 86400) / 3600);
     const minutes = Math.floor((uptime % 3600) / 60);
     const seconds = Math.floor(uptime % 60);
-    return `${hours}h ${minutes}m ${seconds}s`;
+    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
 }
 
-// Ready event
-client.on('ready', async () => {
-    // Set online status
-    await client.user.setStatus('online'); // Can be: 'online', 'idle', 'dnd', 'invisible'
-
-    // Log successful login
-    advancedLog('success', `Logged in as ${client.user.tag}`);
-    advancedLog('info', `User ID: ${client.user.id}`);
-    advancedLog('info', 'Status: ' + chalk.green('Online'));
+// Status rotation system
+let currentStatusIndex = 0;
+function rotateStatus() {
+    if (!config.settings.status.enabled || !config.settings.status.rotation) return;
     
-    // Start uptime tracking
-    setInterval(() => {
-        advancedLog('info', `Uptime: ${getUptime()}`);
-    }, 60000); // Log uptime every minute
+    const options = config.settings.status.options;
+    const status = options[currentStatusIndex];
+    client.user.setActivity(status.text, { type: status.type });
+    currentStatusIndex = (currentStatusIndex + 1) % options.length;
+}
+
+// Progress bar for startup
+const startupBar = new cliProgress.SingleBar({
+    format: chalk.cyan('{bar}') + ' | {percentage}% | {stage}',
+    barCompleteChar: '█',
+    barIncompleteChar: '░',
+    hideCursor: true
 });
 
-// Error handling
+// Connection quality monitoring
+let lastPing = 0;
+function monitorConnection() {
+    const currentPing = client.ws.ping;
+    const pingDiff = Math.abs(currentPing - lastPing);
+    
+    if (pingDiff > 100) {
+        advancedLog('warning', `High ping variation detected: ${pingDiff}ms`, 'box');
+    }
+    
+    lastPing = currentPing;
+}
+
+// Ready event with enhanced initialization
+client.on('ready', async () => {
+    displayBanner();
+    
+    // Initialize startup progress
+    startupBar.start(100, 0, { stage: 'Initializing...' });
+    
+    // Simulate startup stages
+    for (let i = 0; i <= 100; i += 20) {
+        await new Promise(resolve => setTimeout(resolve, 200));
+        startupBar.update(i, { stage: `Loading... ${i}%` });
+    }
+    startupBar.stop();
+
+    // Set initial status if enabled
+    await client.user.setStatus('online');
+    if (config.settings.status.enabled) {
+        rotateStatus();
+        setInterval(rotateStatus, config.settings.status.interval);
+    }
+
+    // Display initial statistics if monitoring enabled
+    const stats = {
+        guilds: client.guilds.cache.size,
+        friends: client.relationships.friendCount,
+        ping: client.ws.ping,
+        ...getSystemStats()
+    };
+
+    advancedLog('success', `Logged in as ${client.user.tag}`, 'box');
+    advancedLog('stats', `
+        📊 Statistics:
+        ├─ Guilds: ${stats.guilds}
+        ├─ Friends: ${stats.friends}
+        ├─ Ping: ${stats.ping}ms
+        ├─ CPU Usage: ${stats.cpu}%
+        ├─ Memory Usage: ${stats.memory}%
+        └─ Uptime: ${stats.uptime}
+    `, 'box');
+
+    // Start monitoring intervals if enabled
+    if (config.settings.monitoring.enabled) {
+        setInterval(() => {
+            const currentStats = {
+                ...getSystemStats(),
+                ping: client.ws.ping
+            };
+            
+            if (config.settings.monitoring.logSystem) {
+                advancedLog('system', `
+                    💻 System Status:
+                    ├─ CPU: ${currentStats.cpu}%
+                    ├─ Memory: ${currentStats.memory}%
+                    ├─ Ping: ${currentStats.ping}ms
+                    └─ Uptime: ${currentStats.uptime}
+                `, 'separator');
+            }
+            
+            if (config.settings.monitoring.logNetwork) {
+                monitorConnection();
+            }
+        }, config.settings.monitoring.interval);
+    }
+});
+
+// Enhanced error handling
 client.on('error', error => {
-    advancedLog('error', `An error occurred: ${error.message}`);
+    advancedLog('error', `
+    ❌ Error Details:
+    ├─ Message: ${error.message}
+    ├─ Name: ${error.name}
+    └─ Stack: ${error.stack}
+    `, 'box');
 });
 
-// Warning handling
+// Warning handling with improved visibility
 client.on('warn', warning => {
-    advancedLog('warning', warning);
+    advancedLog('warning', warning, 'box');
 });
 
-// Login with token
-const TOKEN = 'YOUR_TOKEN_HERE'; // Replace with your token
-client.login(TOKEN).catch(err => {
-    advancedLog('error', `Failed to login: ${err.message}`);
+// Rate limit handling
+client.on('rateLimit', (rateLimitInfo) => {
+    advancedLog('warning', `
+    ⚠️ Rate Limit Hit:
+    ├─ Timeout: ${rateLimitInfo.timeout}ms
+    ├─ Limit: ${rateLimitInfo.limit}
+    └─ Method: ${rateLimitInfo.method}
+    `, 'box');
 });
 
-// Graceful shutdown
-process.on('SIGINT', () => {
-    advancedLog('warning', 'Shutting down...');
-    client.destroy();
-    process.exit(0);
-});
+// Improved shutdown handling
+async function gracefulShutdown() {
+    const spinner = ora('Shutting down...').start();
+    
+    try {
+        // Cleanup tasks
+        clearInterval(rotateStatus);
+        await client.user.setStatus('invisible');
+        await client.destroy();
+        
+        spinner.succeed('Shutdown completed successfully');
+        process.exit(0);
+    } catch (error) {
+        spinner.fail('Error during shutdown');
+        advancedLog('error', `Shutdown error: ${error.message}`);
+        process.exit(1);
+    }
+}
 
-// Unhandled rejection handling
+// Graceful shutdown triggers
+process.on('SIGINT', gracefulShutdown);
+process.on('SIGTERM', gracefulShutdown);
+
+// Enhanced error handling for unhandled rejections
 process.on('unhandledRejection', (error) => {
-    advancedLog('error', `Unhandled rejection: ${error.message}`);
+    advancedLog('error', `
+    ❌ Unhandled Rejection:
+    ├─ Message: ${error.message}
+    ├─ Name: ${error.name}
+    └─ Stack: ${error.stack}
+    `, 'box');
 });
+
+// Load configuration
+const { loadConfig } = require('./config');
+const config = loadConfig();
+
+// Login with retry mechanism
+async function attemptLogin(retries = 3) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            await client.login(config.token);
+            return;
+        } catch (error) {
+            if (i === retries - 1) {
+                advancedLog('error', `Failed to login after ${retries} attempts: ${error.message}`, 'box');
+                process.exit(1);
+            }
+            advancedLog('warning', `Login attempt ${i + 1} failed, retrying in 5 seconds...`);
+            await new Promise(resolve => setTimeout(resolve, 5000));
+        }
+    }
+}
+
+attemptLogin();

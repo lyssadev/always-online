@@ -1,0 +1,27 @@
+{
+    "token": "YOUR_TOKEN_HERE",
+    "settings": {
+        "status": {
+            "enabled": true,
+            "rotation": true,
+            "interval": 300000,
+            "options": [
+                { "text": "🎮 Gaming", "type": "PLAYING" },
+                { "text": "🎵 Music", "type": "LISTENING" },
+                { "text": "📺 Streaming", "type": "STREAMING" },
+                { "text": "🎯 Custom Status", "type": "CUSTOM" }
+            ]
+        },
+        "monitoring": {
+            "enabled": true,
+            "interval": 60000,
+            "logSystem": true,
+            "logNetwork": true
+        },
+        "logging": {
+            "colors": true,
+            "timestamps": true,
+            "decorations": true
+        }
+    }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "always-online",
+  "version": "2.0.0",
+  "description": "Enhanced Discord selfbot for educational purposes",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "monitor": "node 247.js"
+  },
+  "dependencies": {
+    "discord.js-selfbot-v13": "^2.14.12",
+    "chalk": "^4.1.2",
+    "moment": "^2.29.4",
+    "gradient-string": "^2.0.2",
+    "boxen": "^5.1.2",
+    "ora": "^5.4.1",
+    "cli-progress": "^3.12.0",
+    "figlet": "^1.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16.x"
+  },
+  "private": true,
+  "author": "",
+  "license": "MIT"
+}
