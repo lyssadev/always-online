@@ -1,4 +1,4 @@
-const { Client } = require('discord.js-selfbot-v13');
+const { Client } = require('discord.js');
 const chalk = require('chalk');
 const moment = require('moment');
 const gradient = require('gradient-string');
@@ -7,6 +7,7 @@ const boxen = require('boxen');
 const ora = require('ora');
 const cliProgress = require('cli-progress');
 const figlet = require('figlet');
+const config = require('./config.json');
 
 // Initialize client with improved options
 const client = new Client({
@@ -128,7 +129,7 @@ client.on('ready', async () => {
     startupBar.stop();
 
     // Set initial status if enabled
-    await client.user.setStatus('online');
+    await client.user.setStatus(config.settings.status.initialStatus); // Use initialStatus from config
     if (config.settings.status.enabled) {
         rotateStatus();
         setInterval(rotateStatus, config.settings.status.interval);
@@ -235,9 +236,6 @@ process.on('unhandledRejection', (error) => {
     └─ Stack: ${error.stack}
     `, 'box');
 });
-
-// Load configuration
-const config = require('./config.json');
 
 // Login with retry mechanism
 async function attemptLogin(retries = 3) {
