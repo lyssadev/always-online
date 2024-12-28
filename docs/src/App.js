@@ -38,6 +38,8 @@ function App() {
     type: 'online',
     activity: 'PLAYING',
     text: '',
+    smallImage: '',
+    largeImage: '',
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -193,7 +195,11 @@ function App() {
                 status.activity === 'STREAMING' ? 1 : 
                 status.activity === 'LISTENING' ? 2 : 
                 status.activity === 'WATCHING' ? 3 : 
-                status.activity === 'COMPETING' ? 5 : 0
+                status.activity === 'COMPETING' ? 5 : 0,
+          assets: {
+            small_image: status.smallImage,
+            large_image: status.largeImage,
+          }
         }],
         status: status.type,
         afk: false
@@ -327,6 +333,16 @@ function App() {
                         />
                       </Box>
                     )}
+                    <Input
+                      placeholder="Small image URL"
+                      value={status.smallImage}
+                      onChange={(e) => setStatus({ ...status, smallImage: e.target.value })}
+                    />
+                    <Input
+                      placeholder="Large image URL"
+                      value={status.largeImage}
+                      onChange={(e) => setStatus({ ...status, largeImage: e.target.value })}
+                    />
                     <Button colorScheme="blue" onClick={updateStatus} w="full" isLoading={isUpdating}>
                       Update Status
                     </Button>
