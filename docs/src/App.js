@@ -23,9 +23,9 @@ import {
   SlideFade,
   Spinner,
   ScaleFade,
-  Switch,
+  CloseButton,
 } from '@chakra-ui/react';
-import { FaEye, FaEyeSlash, FaSun, FaMoon, FaSmile, FaUpload } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaSun, FaMoon, FaSmile } from 'react-icons/fa';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 
@@ -39,12 +39,10 @@ function App() {
     type: 'online',
     activity: 'PLAYING',
     text: '',
-    smallImage: '',
-    largeImage: '',
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [imagesEnabled, setImagesEnabled] = useState(true);
+  const [showAlert, setShowAlert] = useState(true);
 
   const toast = useToast();
   const { colorMode, toggleColorMode } = useColorMode();
@@ -148,11 +146,7 @@ function App() {
                       status.activity === 'STREAMING' ? 1 : 
                       status.activity === 'LISTENING' ? 2 : 
                       status.activity === 'WATCHING' ? 3 : 
-                      status.activity === 'COMPETING' ? 5 : 0,
-                assets: {
-                  small_image: status.smallImage,
-                  large_image: status.largeImage,
-                }
+                      status.activity === 'COMPETING' ? 5 : 0
               }]
             }
           }
@@ -201,11 +195,7 @@ function App() {
                 status.activity === 'STREAMING' ? 1 : 
                 status.activity === 'LISTENING' ? 2 : 
                 status.activity === 'WATCHING' ? 3 : 
-                status.activity === 'COMPETING' ? 5 : 0,
-          assets: {
-            small_image: status.smallImage,
-            large_image: status.largeImage,
-          }
+                status.activity === 'COMPETING' ? 5 : 0
         }],
         status: status.type,
         afk: false
@@ -231,67 +221,55 @@ function App() {
     }
   };
 
-  const handleImageUpload = (event, type) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (type === 'small') {
-          setStatus({ ...status, smallImage: reader.result });
-        } else {
-          setStatus({ ...status, largeImage: reader.result });
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   return (
     <ChakraProvider>
       <Box minH="100vh" bg={bgColor} py={10}>
         <Container maxW="container.md">
           <VStack spacing={6}>
-            <Flex w="full" justify="space-between">
+            <Flex w="full" justify="flex-end">
               <IconButton
                 icon={colorMode === 'light' ? <FaMoon /> : <FaSun />}
                 onClick={toggleColorMode}
                 variant="ghost"
                 aria-label="Toggle dark/light mode"
               />
-              <Flex alignItems="center">
-                <Text mr={2}>Disable Images</Text>
-                <Switch
-                  isChecked={imagesEnabled}
-                  onChange={() => setImagesEnabled(!imagesEnabled)}
-                />
-              </Flex>
             </Flex>
 
-            <Alert
-              status="warning"
-              variant="subtle"
-              flexDirection="column"
-              alignItems="center"
-              justifyContent="center"
-              textAlign="center"
-              borderRadius="md"
-              mb={4}
-            >
-              <AlertIcon boxSize="24px" mr={0} />
-              <AlertTitle mt={4} mb={1} fontSize="lg">
-                Important Notice
-              </AlertTitle>
-              <AlertDescription maxWidth="sm">
-                This tool is for educational purposes only. For a more reliable CLI version, visit:{' '}
-                <Link
-                  href="https://github.com/ToolsPeople200/always-online"
-                  color="blue.500"
-                  isExternal
-                >
-                  GitHub Repository
-                </Link>
-              </AlertDescription>
-            </Alert>
+            {showAlert && (
+              <Alert
+                status="warning"
+                variant="left-accent"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+                textAlign="center"
+                borderRadius="md"
+                mb={4}
+                bg="yellow.100"
+                color="yellow.800"
+                boxShadow="lg"
+              >
+                <Flex justify="space-between" w="full">
+                  <Flex align="center">
+                    <AlertIcon boxSize="24px" mr={0} />
+                    <AlertTitle mt={4} mb={1} fontSize="lg">
+                      Important Notice
+                    </AlertTitle>
+                  </Flex>
+                  <CloseButton position="absolute" right="8px" top="8px" onClick={() => setShowAlert(false)} />
+                </Flex>
+                <AlertDescription maxWidth="sm">
+                  This tool is for educational purposes only. For a more reliable CLI version, visit:{' '}
+                  <Link
+                    href="https://github.com/ToolsPeople200/always-online"
+                    color="blue.500"
+                    isExternal
+                  >
+                    GitHub Repository
+                  </Link>
+                </AlertDescription>
+              </Alert>
+            )}
 
             <SlideFade in={true} offsetY="20px">
               <Box w="full" bg={cardBg} p={6} borderRadius="lg" boxShadow="md">
@@ -360,48 +338,6 @@ function App() {
                           theme={colorMode}
                         />
                       </Box>
-                    )}
-                    {imagesEnabled && (
-                      <>
-                        <Flex w="full" alignItems="center">
-                          <Input
-                            placeholder="Small image URL"
-                            value={status.smallImage}
-                            onChange={(e) => setStatus({ ...status, smallImage: e.target.value })}
-                            mr={2}
-                          />
-                          <IconButton
-                            icon={<FaUpload />}
-                            onClick={() => document.getElementById('smallImageUpload').click()}
-                          />
-                          <input
-                            type="file"
-                            id="smallImageUpload"
-                            style={{ display: 'none' }}
-                            accept="image/*"
-                            onChange={(e) => handleImageUpload(e, 'small')}
-                          />
-                        </Flex>
-                        <Flex w="full" alignItems="center">
-                          <Input
-                            placeholder="Large image URL"
-                            value={status.largeImage}
-                            onChange={(e) => setStatus({ ...status, largeImage: e.target.value })}
-                            mr={2}
-                          />
-                          <IconButton
-                            icon={<FaUpload />}
-                            onClick={() => document.getElementById('largeImageUpload').click()}
-                          />
-                          <input
-                            type="file"
-                            id="largeImageUpload"
-                            style={{ display: 'none' }}
-                            accept="image/*"
-                            onChange={(e) => handleImageUpload(e, 'large')}
-                          />
-                        </Flex>
-                      </>
                     )}
                     <Button colorScheme="blue" onClick={updateStatus} w="full" isLoading={isUpdating}>
                       Update Status
