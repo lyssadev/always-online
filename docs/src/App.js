@@ -18,6 +18,11 @@ import {
   Flex,
   useColorMode,
   useColorModeValue,
+  Heading,
+  Stack,
+  SlideFade,
+  Spinner,
+  ScaleFade,
 } from '@chakra-ui/react';
 import { FaEye, FaEyeSlash, FaSun, FaMoon, FaSmile } from 'react-icons/fa';
 import data from '@emoji-mart/data';
@@ -34,6 +39,8 @@ function App() {
     activity: 'PLAYING',
     text: '',
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const toast = useToast();
   const { colorMode, toggleColorMode } = useColorMode();
@@ -49,6 +56,7 @@ function App() {
   }, [ws]);
 
   const connect = () => {
+    setIsLoading(true);
     if (!token) {
       toast({
         title: 'Error',
@@ -57,6 +65,7 @@ function App() {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -72,6 +81,7 @@ function App() {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
     };
 
     wsConnection.onmessage = (event) => {
@@ -88,6 +98,7 @@ function App() {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
     };
 
     wsConnection.onclose = () => {
@@ -101,6 +112,7 @@ function App() {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
     };
 
     setWs(wsConnection);
@@ -158,6 +170,7 @@ function App() {
   };
 
   const updateStatus = () => {
+    setIsUpdating(true);
     if (!ws || !connected) {
       toast({
         title: 'Error',
@@ -166,6 +179,7 @@ function App() {
         duration: 3000,
         isClosable: true,
       });
+      setIsUpdating(false);
       return;
     }
 
@@ -194,6 +208,7 @@ function App() {
       duration: 3000,
       isClosable: true,
     });
+    setIsUpdating(false);
   };
 
   const disconnect = () => {
@@ -244,82 +259,84 @@ function App() {
               </AlertDescription>
             </Alert>
 
-            <Box w="full" bg={cardBg} p={6} borderRadius="lg" boxShadow="md">
-              {!connected ? (
-                <VStack spacing={4}>
-                  <Text fontSize="xl" fontWeight="bold">Connect to Discord</Text>
-                  <Flex w="full">
-                    <Input
-                      type={showToken ? 'text' : 'password'}
-                      placeholder="Enter your Discord token"
-                      value={token}
-                      onChange={(e) => setToken(e.target.value)}
-                      mr={2}
-                    />
-                    <IconButton
-                      icon={showToken ? <FaEyeSlash /> : <FaEye />}
-                      onClick={() => setShowToken(!showToken)}
-                    />
-                  </Flex>
-                  <Button colorScheme="blue" onClick={connect} w="full">
-                    Connect
-                  </Button>
-                </VStack>
-              ) : (
-                <VStack spacing={4}>
-                  <Text fontSize="xl" fontWeight="bold">Update Status</Text>
-                  <Select
-                    value={status.type}
-                    onChange={(e) => setStatus({ ...status, type: e.target.value })}
-                  >
-                    <option value="online">🟢 Online</option>
-                    <option value="idle">🌙 Idle</option>
-                    <option value="dnd">⛔ Do Not Disturb</option>
-                    <option value="invisible">⚫ Invisible</option>
-                  </Select>
-                  <Select
-                    value={status.activity}
-                    onChange={(e) => setStatus({ ...status, activity: e.target.value })}
-                  >
-                    <option value="PLAYING">🎮 Playing</option>
-                    <option value="LISTENING">🎵 Listening to</option>
-                    <option value="WATCHING">📺 Watching</option>
-                    <option value="STREAMING">🎥 Streaming</option>
-                    <option value="COMPETING">🏆 Competing in</option>
-                  </Select>
-                  <Flex w="full">
-                    <Input
-                      placeholder="Status text"
-                      value={status.text}
-                      onChange={(e) => setStatus({ ...status, text: e.target.value })}
-                      mr={2}
-                    />
-                    <IconButton
-                      icon={<FaSmile />}
-                      onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                    />
-                  </Flex>
-                  {showEmojiPicker && (
-                    <Box position="absolute" zIndex="modal">
-                      <Picker
-                        data={data}
-                        onEmojiSelect={(emoji) => {
-                          setStatus({ ...status, text: status.text + emoji.native });
-                          setShowEmojiPicker(false);
-                        }}
-                        theme={colorMode}
+            <SlideFade in={true} offsetY="20px">
+              <Box w="full" bg={cardBg} p={6} borderRadius="lg" boxShadow="md">
+                {!connected ? (
+                  <VStack spacing={4}>
+                    <Heading as="h2" size="lg">Connect to Discord</Heading>
+                    <Flex w="full">
+                      <Input
+                        type={showToken ? 'text' : 'password'}
+                        placeholder="Enter your Discord token"
+                        value={token}
+                        onChange={(e) => setToken(e.target.value)}
+                        mr={2}
                       />
-                    </Box>
-                  )}
-                  <Button colorScheme="blue" onClick={updateStatus} w="full">
-                    Update Status
-                  </Button>
-                  <Button colorScheme="red" onClick={disconnect} w="full">
-                    Disconnect
-                  </Button>
-                </VStack>
-              )}
-            </Box>
+                      <IconButton
+                        icon={showToken ? <FaEyeSlash /> : <FaEye />}
+                        onClick={() => setShowToken(!showToken)}
+                      />
+                    </Flex>
+                    <Button colorScheme="blue" onClick={connect} w="full" isLoading={isLoading}>
+                      Connect
+                    </Button>
+                  </VStack>
+                ) : (
+                  <VStack spacing={4}>
+                    <Heading as="h2" size="lg">Update Status</Heading>
+                    <Select
+                      value={status.type}
+                      onChange={(e) => setStatus({ ...status, type: e.target.value })}
+                    >
+                      <option value="online">🟢 Online</option>
+                      <option value="idle">🌙 Idle</option>
+                      <option value="dnd">⛔ Do Not Disturb</option>
+                      <option value="invisible">⚫ Invisible</option>
+                    </Select>
+                    <Select
+                      value={status.activity}
+                      onChange={(e) => setStatus({ ...status, activity: e.target.value })}
+                    >
+                      <option value="PLAYING">🎮 Playing</option>
+                      <option value="LISTENING">🎵 Listening to</option>
+                      <option value="WATCHING">📺 Watching</option>
+                      <option value="STREAMING">🎥 Streaming</option>
+                      <option value="COMPETING">🏆 Competing in</option>
+                    </Select>
+                    <Flex w="full">
+                      <Input
+                        placeholder="Status text"
+                        value={status.text}
+                        onChange={(e) => setStatus({ ...status, text: e.target.value })}
+                        mr={2}
+                      />
+                      <IconButton
+                        icon={<FaSmile />}
+                        onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                      />
+                    </Flex>
+                    {showEmojiPicker && (
+                      <Box position="absolute" zIndex="modal">
+                        <Picker
+                          data={data}
+                          onEmojiSelect={(emoji) => {
+                            setStatus({ ...status, text: status.text + emoji.native });
+                            setShowEmojiPicker(false);
+                          }}
+                          theme={colorMode}
+                        />
+                      </Box>
+                    )}
+                    <Button colorScheme="blue" onClick={updateStatus} w="full" isLoading={isUpdating}>
+                      Update Status
+                    </Button>
+                    <Button colorScheme="red" onClick={disconnect} w="full">
+                      Disconnect
+                    </Button>
+                  </VStack>
+                )}
+              </Box>
+            </SlideFade>
           </VStack>
         </Container>
       </Box>
