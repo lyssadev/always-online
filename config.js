@@ -10,6 +10,7 @@ const defaultConfig = {
             enabled: true,
             rotation: true,
             interval: 300000, // 5 minutes
+            initialStatus: 'online', // Add this line
             options: [
                 { text: '🎮 Gaming', type: 'PLAYING' },
                 { text: '🎵 Music', type: 'LISTENING' },

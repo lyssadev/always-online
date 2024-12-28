@@ -237,8 +237,7 @@ process.on('unhandledRejection', (error) => {
 });
 
 // Load configuration
-const { loadConfig } = require('./config');
-const config = loadConfig();
+const config = require('./config.json');
 
 // Login with retry mechanism
 async function attemptLogin(retries = 3) {
