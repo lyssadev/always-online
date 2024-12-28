@@ -24,7 +24,7 @@ import {
   Spinner,
   ScaleFade,
 } from '@chakra-ui/react';
-import { FaEye, FaEyeSlash, FaSun, FaMoon, FaSmile } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaSun, FaMoon, FaSmile, FaUpload } from 'react-icons/fa';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 
@@ -146,7 +146,11 @@ function App() {
                       status.activity === 'STREAMING' ? 1 : 
                       status.activity === 'LISTENING' ? 2 : 
                       status.activity === 'WATCHING' ? 3 : 
-                      status.activity === 'COMPETING' ? 5 : 0
+                      status.activity === 'COMPETING' ? 5 : 0,
+                assets: {
+                  small_image: status.smallImage,
+                  large_image: status.largeImage,
+                }
               }]
             }
           }
@@ -222,6 +226,21 @@ function App() {
       ws.close();
       setWs(null);
       setConnected(false);
+    }
+  };
+
+  const handleImageUpload = (event, type) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (type === 'small') {
+          setStatus({ ...status, smallImage: reader.result });
+        } else {
+          setStatus({ ...status, largeImage: reader.result });
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -333,16 +352,44 @@ function App() {
                         />
                       </Box>
                     )}
-                    <Input
-                      placeholder="Small image URL"
-                      value={status.smallImage}
-                      onChange={(e) => setStatus({ ...status, smallImage: e.target.value })}
-                    />
-                    <Input
-                      placeholder="Large image URL"
-                      value={status.largeImage}
-                      onChange={(e) => setStatus({ ...status, largeImage: e.target.value })}
-                    />
+                    <Flex w="full" alignItems="center">
+                      <Input
+                        placeholder="Small image URL"
+                        value={status.smallImage}
+                        onChange={(e) => setStatus({ ...status, smallImage: e.target.value })}
+                        mr={2}
+                      />
+                      <IconButton
+                        icon={<FaUpload />}
+                        onClick={() => document.getElementById('smallImageUpload').click()}
+                      />
+                      <input
+                        type="file"
+                        id="smallImageUpload"
+                        style={{ display: 'none' }}
+                        accept="image/*"
+                        onChange={(e) => handleImageUpload(e, 'small')}
+                      />
+                    </Flex>
+                    <Flex w="full" alignItems="center">
+                      <Input
+                        placeholder="Large image URL"
+                        value={status.largeImage}
+                        onChange={(e) => setStatus({ ...status, largeImage: e.target.value })}
+                        mr={2}
+                      />
+                      <IconButton
+                        icon={<FaUpload />}
+                        onClick={() => document.getElementById('largeImageUpload').click()}
+                      />
+                      <input
+                        type="file"
+                        id="largeImageUpload"
+                        style={{ display: 'none' }}
+                        accept="image/*"
+                        onChange={(e) => handleImageUpload(e, 'large')}
+                      />
+                    </Flex>
                     <Button colorScheme="blue" onClick={updateStatus} w="full" isLoading={isUpdating}>
                       Update Status
                     </Button>
