@@ -1,24 +1,22 @@
-# Enhanced Discord Selfbot (Educational Purposes Only)
+# Discord Status Customizer (Educational Purposes Only)
 
-⚠️ **IMPORTANT DISCLAIMER** ⚠️
-This selfbot is created for educational purposes only. Using selfbots is against Discord's Terms of Service and can result in account termination. Use at your own risk.
+⚠️ **DISCLAIMER** ⚠️
+This tool is for educational purposes only. Using selfbots is against Discord's Terms of Service and can result in account termination. Use at your own risk.
 
-## 🌟 Enhanced Features
+## 🌟 Features
 
-### 🔄 Core Features
-- Advanced console logging with decorative elements
+### 🔄 Core
+- Advanced console logging
 - Real-time system monitoring (CPU, Memory, Uptime)
 - Auto-status rotation with multiple activity types
 - Connection quality monitoring
 - Enhanced error handling and crash recovery
 - Rate limit protection
-- Graceful shutdown sequence
+- Graceful shutdown
 - Token validation and secure login
 
-### 📊 Monitoring Features
-- CPU usage tracking
-- Memory usage monitoring
-- Network latency monitoring
+### 📊 Monitoring
+- CPU, Memory, and Network usage tracking
 - Guild/Friend/Channel statistics
 - Connection quality analysis
 - Process health monitoring
@@ -26,16 +24,14 @@ This selfbot is created for educational purposes only. Using selfbots is against
 ### 🎨 Visual Enhancements
 - Gradient text effects
 - ASCII art banners
-- Progress bars for startup
-- Loading spinners
+- Progress bars and loading spinners
 - Boxed status messages
 - Color-coded log levels
-- Separator lines
 - Centered text formatting
 - Table-formatted statistics
 - Custom status icons
 
-### 🛡️ Reliability Features
+### 🛡️ Reliability
 - Automatic crash recovery
 - Rate limit handling
 - Connection retry mechanism
@@ -126,49 +122,11 @@ npm run monitor
 - Separator lines
 - Table formatting
 
-## ⚙️ Status Options
-The bot now features automatic status rotation between:
-- 🎮 Playing status
-- 🎵 Listening status
-- 📺 Streaming status
-- 🎯 Custom status
-
-## 📊 Monitoring Features
-Real-time monitoring of:
-- CPU usage
-- Memory usage
-- Network latency
-- Connection quality
-- Process health
-- System uptime
-- Bot statistics
-
 ## ⚠️ Security Warning
 Never share your Discord token with anyone. The token provides full access to your Discord account.
 
-## 🔄 24/7 Operation (Not Recommended)
-Enhanced 24/7 monitoring system with:
-- Smart crash recovery
-- System resource monitoring
-- Process health checks
-- Cooldown periods
-- Maximum restart limits
-- Advanced error logging
-- Clean shutdown handling
-
-Features of 24/7 mode:
-- Intelligent restart system
-- Resource usage monitoring
-- Advanced error tracking
-- Process state management
-- Crash analysis
-- Performance metrics
-- Health checks
-
-⚠️ **Warning**: Running a selfbot 24/7 significantly increases the risk of detection and account termination.
-
 ## 🎓 Educational Value
-This enhanced version demonstrates:
+This project demonstrates:
 - Advanced Node.js application architecture
 - Complex event handling
 - Process management techniques
