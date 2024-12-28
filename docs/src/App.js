@@ -23,6 +23,7 @@ import {
   SlideFade,
   Spinner,
   ScaleFade,
+  Switch,
 } from '@chakra-ui/react';
 import { FaEye, FaEyeSlash, FaSun, FaMoon, FaSmile, FaUpload } from 'react-icons/fa';
 import data from '@emoji-mart/data';
@@ -43,6 +44,7 @@ function App() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [imagesEnabled, setImagesEnabled] = useState(true);
 
   const toast = useToast();
   const { colorMode, toggleColorMode } = useColorMode();
@@ -249,13 +251,20 @@ function App() {
       <Box minH="100vh" bg={bgColor} py={10}>
         <Container maxW="container.md">
           <VStack spacing={6}>
-            <Flex w="full" justify="flex-end">
+            <Flex w="full" justify="space-between">
               <IconButton
                 icon={colorMode === 'light' ? <FaMoon /> : <FaSun />}
                 onClick={toggleColorMode}
                 variant="ghost"
                 aria-label="Toggle dark/light mode"
               />
+              <Flex alignItems="center">
+                <Text mr={2}>Disable Images</Text>
+                <Switch
+                  isChecked={imagesEnabled}
+                  onChange={() => setImagesEnabled(!imagesEnabled)}
+                />
+              </Flex>
             </Flex>
 
             <Alert
@@ -352,44 +361,48 @@ function App() {
                         />
                       </Box>
                     )}
-                    <Flex w="full" alignItems="center">
-                      <Input
-                        placeholder="Small image URL"
-                        value={status.smallImage}
-                        onChange={(e) => setStatus({ ...status, smallImage: e.target.value })}
-                        mr={2}
-                      />
-                      <IconButton
-                        icon={<FaUpload />}
-                        onClick={() => document.getElementById('smallImageUpload').click()}
-                      />
-                      <input
-                        type="file"
-                        id="smallImageUpload"
-                        style={{ display: 'none' }}
-                        accept="image/*"
-                        onChange={(e) => handleImageUpload(e, 'small')}
-                      />
-                    </Flex>
-                    <Flex w="full" alignItems="center">
-                      <Input
-                        placeholder="Large image URL"
-                        value={status.largeImage}
-                        onChange={(e) => setStatus({ ...status, largeImage: e.target.value })}
-                        mr={2}
-                      />
-                      <IconButton
-                        icon={<FaUpload />}
-                        onClick={() => document.getElementById('largeImageUpload').click()}
-                      />
-                      <input
-                        type="file"
-                        id="largeImageUpload"
-                        style={{ display: 'none' }}
-                        accept="image/*"
-                        onChange={(e) => handleImageUpload(e, 'large')}
-                      />
-                    </Flex>
+                    {imagesEnabled && (
+                      <>
+                        <Flex w="full" alignItems="center">
+                          <Input
+                            placeholder="Small image URL"
+                            value={status.smallImage}
+                            onChange={(e) => setStatus({ ...status, smallImage: e.target.value })}
+                            mr={2}
+                          />
+                          <IconButton
+                            icon={<FaUpload />}
+                            onClick={() => document.getElementById('smallImageUpload').click()}
+                          />
+                          <input
+                            type="file"
+                            id="smallImageUpload"
+                            style={{ display: 'none' }}
+                            accept="image/*"
+                            onChange={(e) => handleImageUpload(e, 'small')}
+                          />
+                        </Flex>
+                        <Flex w="full" alignItems="center">
+                          <Input
+                            placeholder="Large image URL"
+                            value={status.largeImage}
+                            onChange={(e) => setStatus({ ...status, largeImage: e.target.value })}
+                            mr={2}
+                          />
+                          <IconButton
+                            icon={<FaUpload />}
+                            onClick={() => document.getElementById('largeImageUpload').click()}
+                          />
+                          <input
+                            type="file"
+                            id="largeImageUpload"
+                            style={{ display: 'none' }}
+                            accept="image/*"
+                            onChange={(e) => handleImageUpload(e, 'large')}
+                          />
+                        </Flex>
+                      </>
+                    )}
                     <Button colorScheme="blue" onClick={updateStatus} w="full" isLoading={isUpdating}>
                       Update Status
                     </Button>
