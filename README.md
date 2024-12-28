@@ -64,6 +64,7 @@ npm install
         "enabled": true,
         "rotation": true,
         "interval": 300000,
+        "initialStatus": "online",
         "options": [
           { "text": "🎮 Gaming", "type": "PLAYING" },
           { "text": "🎵 Music", "type": "LISTENING" },
