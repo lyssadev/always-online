@@ -128,7 +128,11 @@ function App() {
               status: status.type,
               activities: [{
                 name: status.text || 'Discord Status Customizer',
-                type: status.activity
+                type: status.activity === 'PLAYING' ? 0 : 
+                      status.activity === 'STREAMING' ? 1 : 
+                      status.activity === 'LISTENING' ? 2 : 
+                      status.activity === 'WATCHING' ? 3 : 
+                      status.activity === 'COMPETING' ? 5 : 0
               }]
             }
           }
@@ -171,7 +175,11 @@ function App() {
         since: null,
         activities: [{
           name: status.text || 'Discord Status Customizer',
-          type: status.activity
+          type: status.activity === 'PLAYING' ? 0 : 
+                status.activity === 'STREAMING' ? 1 : 
+                status.activity === 'LISTENING' ? 2 : 
+                status.activity === 'WATCHING' ? 3 : 
+                status.activity === 'COMPETING' ? 5 : 0
         }],
         status: status.type,
         afk: false
@@ -206,6 +214,7 @@ function App() {
                 icon={colorMode === 'light' ? <FaMoon /> : <FaSun />}
                 onClick={toggleColorMode}
                 variant="ghost"
+                aria-label="Toggle dark/light mode"
               />
             </Flex>
 
