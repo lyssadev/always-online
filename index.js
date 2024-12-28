@@ -1,4 +1,4 @@
-const { Client } = require('discord.js');
+const { Client } = require('discord.js-selfbot-v13');
 const chalk = require('chalk');
 const moment = require('moment');
 const gradient = require('gradient-string');
