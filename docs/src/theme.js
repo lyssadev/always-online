@@ -47,7 +47,7 @@ const colors = {
 const styles = {
   global: (props) => ({
     body: {
-      bg: props.colorMode === 'dark' ? 'gray.800' : 'gray.50',
+      bg: props.colorMode === 'dark' ? 'gray.900' : 'gray.50',
     },
   }),
 };
@@ -57,6 +57,14 @@ const components = {
     defaultProps: {
       colorScheme: 'primary',
       isLoading: false,
+    },
+    baseStyle: {
+      _hover: {
+        transform: 'scale(1.05)',
+      },
+      _active: {
+        transform: 'scale(0.95)',
+      },
     },
   },
   Input: {

@@ -233,7 +233,7 @@ function App() {
   return (
     <ChakraProvider>
       <Box minH="100vh" bg={bgColor} py={10}>
-        <Container maxW="container.md">
+        <Container maxW={{ base: "container.sm", md: "container.md" }}>
           <VStack spacing={6}>
             <Flex w="full" justify="flex-end">
               <IconButton
