@@ -59,6 +59,7 @@ function App() {
 
   const connect = () => {
     setIsLoading(true);
+    console.log('Attempting to connect to Discord gateway...');
     if (!token) {
       toast({
         title: 'Error',
@@ -88,6 +89,7 @@ function App() {
 
     wsConnection.onmessage = (event) => {
       const data = JSON.parse(event.data);
+      console.log('Received message from Discord gateway:', data);
       handleGatewayMessage(data, wsConnection, interval);
     };
 
@@ -122,6 +124,7 @@ function App() {
 
   const handleGatewayMessage = (data, wsConnection, interval) => {
     const { op, t, d } = data;
+    console.log('Handling gateway message:', { op, t, d });
 
     switch (op) {
       case 10: // Hello
@@ -151,10 +154,12 @@ function App() {
             }
           }
         }));
+        console.log('Sent identify payload to Discord gateway');
         break;
 
       case 0: // Dispatch
         if (t === 'READY') {
+          console.log('Received READY event from Discord gateway');
           setConnected(true);
           toast({
             title: 'Ready',
@@ -167,12 +172,14 @@ function App() {
         break;
 
       default:
+        console.log('Unhandled gateway message:', data);
         break;
     }
   };
 
   const updateStatus = () => {
     setIsUpdating(true);
+    console.log('Updating status...');
     if (!ws || !connected) {
       toast({
         title: 'Error',
@@ -203,6 +210,7 @@ function App() {
     };
 
     ws.send(JSON.stringify(presence));
+    console.log('Sent presence update to Discord gateway:', presence);
     toast({
       title: 'Status Updated',
       description: 'Successfully updated Discord status',
@@ -214,6 +222,7 @@ function App() {
   };
 
   const disconnect = () => {
+    console.log('Disconnecting from Discord gateway...');
     if (ws) {
       ws.close();
       setWs(null);
@@ -289,7 +298,7 @@ function App() {
                         onClick={() => setShowToken(!showToken)}
                       />
                     </Flex>
-                    <Button colorScheme="blue" onClick={connect} w="full" isLoading={isLoading}>
+                    <Button colorScheme="primary" onClick={connect} w="full" isLoading={isLoading}>
                       Connect
                     </Button>
                   </VStack>
@@ -339,7 +348,7 @@ function App() {
                         />
                       </Box>
                     )}
-                    <Button colorScheme="blue" onClick={updateStatus} w="full" isLoading={isUpdating}>
+                    <Button colorScheme="primary" onClick={updateStatus} w="full" isLoading={isUpdating}>
                       Update Status
                     </Button>
                     <Button colorScheme="red" onClick={disconnect} w="full">
