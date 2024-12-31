@@ -15,13 +15,7 @@ const client = new Client({
     language: 'en-US',
     autoRedeemNitro: false,
     captchaService: 'custom',
-    wsEventLimit: 100,
-    presence: {
-        activities: [{
-            name: "Educational Purpose",
-            type: "PLAYING"
-        }]
-    }
+    wsEventLimit: 100
 });
 
 // ASCII Art Banner

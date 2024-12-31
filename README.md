@@ -95,9 +95,6 @@ npm start
 
 # Development mode with auto-restart
 npm run dev
-
-# 24/7 monitoring mode
-npm run monitor
 ```
 
 ## 🎯 Console Output Features
