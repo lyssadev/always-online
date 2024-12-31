@@ -298,7 +298,14 @@ function App() {
                         onClick={() => setShowToken(!showToken)}
                       />
                     </Flex>
-                    <Button colorScheme="primary" onClick={connect} w="full" isLoading={isLoading}>
+                    <Button 
+                      colorScheme="primary" 
+                      onClick={connect} 
+                      w="full" 
+                      isLoading={isLoading}
+                      border="1px solid"
+                      borderColor={colorMode === 'light' ? 'gray.300' : 'gray.600'}
+                    >
                       Connect
                     </Button>
                   </VStack>
