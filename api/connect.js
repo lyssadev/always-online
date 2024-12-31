@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const response = await axios.post('https://discord.com/api/v9/gateway/bot', {}, {
+    const response = await axios.get('https://discord.com/api/v9/gateway/bot', {
       headers: {
         Authorization: `Bot ${token}`
       }
