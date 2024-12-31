@@ -299,7 +299,9 @@ function App() {
                       />
                     </Flex>
                     <Button 
-                      colorScheme="primary" 
+                      bg="gray.800"
+                      color="white"
+                      _hover={{ bg: "gray.700" }}
                       onClick={connect} 
                       w="full" 
                       isLoading={isLoading}
