@@ -57,7 +57,7 @@ function App() {
     };
   }, [ws]);
 
-  const connect = () => {
+  const connect = async () => {
     setIsLoading(true);
     console.log('Attempting to connect to Discord gateway...');
     if (!token) {
@@ -72,29 +72,30 @@ function App() {
       return;
     }
 
-    const wsConnection = new WebSocket('wss://gateway.discord.gg/?v=9&encoding=json');
-    let interval;
-
-    wsConnection.onopen = () => {
-      console.log('Connected to Discord gateway');
-      toast({
-        title: 'Connected',
-        description: 'Successfully connected to Discord gateway',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
+    try {
+      const response = await fetch('/api/connect', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ token })
       });
-      setIsLoading(false);
-    };
-
-    wsConnection.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      console.log('Received message from Discord gateway:', data);
-      handleGatewayMessage(data, wsConnection, interval);
-    };
-
-    wsConnection.onerror = (error) => {
-      console.error('WebSocket error:', error);
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Connected to Discord gateway');
+        toast({
+          title: 'Connected',
+          description: 'Successfully connected to Discord gateway',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+        setIsLoading(false);
+      } else {
+        throw new Error(data.error);
+      }
+    } catch (error) {
+      console.error('Failed to connect to Discord:', error);
       toast({
         title: 'Connection Error',
         description: 'Failed to connect to Discord',
@@ -103,23 +104,7 @@ function App() {
         isClosable: true,
       });
       setIsLoading(false);
-    };
-
-    wsConnection.onclose = () => {
-      console.log('Disconnected from Discord gateway');
-      setConnected(false);
-      clearInterval(interval);
-      toast({
-        title: 'Disconnected',
-        description: 'Disconnected from Discord gateway',
-        status: 'info',
-        duration: 3000,
-        isClosable: true,
-      });
-      setIsLoading(false);
-    };
-
-    setWs(wsConnection);
+    }
   };
 
   const handleGatewayMessage = (data, wsConnection, interval) => {
