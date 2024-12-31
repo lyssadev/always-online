@@ -357,7 +357,16 @@ function App() {
                         />
                       </Box>
                     )}
-                    <Button colorScheme="primary" onClick={updateStatus} w="full" isLoading={isUpdating}>
+                    <Button 
+                      bg="gray.800"
+                      color="white"
+                      _hover={{ bg: "gray.700" }}
+                      onClick={updateStatus} 
+                      w="full" 
+                      isLoading={isUpdating}
+                      border="1px solid"
+                      borderColor={colorMode === 'light' ? 'gray.300' : 'gray.600'}
+                    >
                       Update Status
                     </Button>
                     <Button colorScheme="red" onClick={disconnect} w="full">
@@ -367,6 +376,14 @@ function App() {
                 )}
               </Box>
             </SlideFade>
+            <Text
+              bgGradient="linear(to-l, #7928CA, #FF0080)"
+              bgClip="text"
+              fontSize="2xl"
+              fontWeight="extrabold"
+            >
+              Made By - lyssadev
+            </Text>
           </VStack>
         </Container>
       </Box>

@@ -142,3 +142,6 @@ This project demonstrates:
 - NPM >= 7.x
 - Modern terminal with Unicode support
 - Color terminal support
+
+## 🌐 Website
+For an alternative web version, visit: [https://always-online-nine.vercel.app](https://always-online-nine.vercel.app)
