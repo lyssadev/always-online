@@ -17,12 +17,19 @@ document.addEventListener('DOMContentLoaded', function() {
     themeToggle.addEventListener('click', function() {
         document.body.classList.toggle('dark-theme');
         
-        // Save preference
         if (document.body.classList.contains('dark-theme')) {
             localStorage.setItem('theme', 'dark');
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
         } else {
             localStorage.setItem('theme', 'light');
+            themeIcon.classList.replace('fa-sun', 'fa-moon');
         }
+        
+        // Añadir animación temporal
+        this.classList.add('animate');
+        setTimeout(() => {
+            this.classList.remove('animate');
+        }, 1500);
     });
     
     // Token visibility toggle
