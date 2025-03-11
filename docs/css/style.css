@@ -45,7 +45,36 @@
 }
 
 /* Aplicar transiciones solo a propiedades específicas para mejor rendimiento */
-body, .card, .terminal, .top-nav, .form-card, .about-section, .feature-item {
+body, .card, .te/* ... existing code ... */
+
+.toggle-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1rem;
+    z-index: 10;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.toggle-btn:hover {
+    color: var(--primary);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-md);
+    position: relative; /* Add position relative to contain the absolute positioned button */
+}
+
+/* ... existing code ... */rminal, .top-nav, .form-card, .about-section, .feature-item {
     transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 
@@ -626,6 +655,7 @@ footer {
 /* Estilos para formularios y controles */
 .form-group {
     margin-bottom: var(--spacing-md);
+    position: relative;
 }
 
 .form-group label {
@@ -677,6 +707,16 @@ footer {
     color: var(--text-muted);
     cursor: pointer;
     font-size: 1rem;
+    z-index: 10;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.toggle-btn:hover {
+    color: var(--primary);
 }
 
 /* Botones primarios y secundarios */
