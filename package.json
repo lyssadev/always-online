@@ -1,6 +1,6 @@
 {
   "name": "always-online",
-  "version": "2.0.0",
+  "version": "2.0.5",
   "description": "Enhanced Discord selfbot for educational purposes",
   "main": "index.js",
   "scripts": {
@@ -24,6 +24,6 @@
     "node": ">=16.x"
   },
   "private": true,
-  "author": "",
+  "author": "lyssadev",
   "license": "MIT"
 }

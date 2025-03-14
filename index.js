@@ -15,7 +15,24 @@ const client = new Client({
     language: 'en-US',
     autoRedeemNitro: false,
     captchaService: 'custom',
-    wsEventLimit: 100
+    wsEventLimit: 100,
+    patchVoice: false,  // Disable voice patching
+    syncStatus: false,  // Disable status syncing
+    readyTimeout: 30000,  // Increase ready timeout
+    // Disable problematic features
+    ws: {
+        properties: {
+            $browser: 'Discord Client',
+            $device: 'Discord Client',
+            $os: process.platform
+        }
+    },
+    // Disable user settings
+    userSettingsCache: false,
+    userSettings: {
+        all: false,
+        sync: false
+    }
 });
 
 // ASCII Art Banner
@@ -110,66 +127,110 @@ function monitorConnection() {
 
 // Ready event with enhanced initialization
 client.on('ready', async () => {
-    displayBanner();
-    
-    // Initialize startup progress
-    startupBar.start(100, 0, { stage: 'Initializing...' });
-    
-    // Simulate startup stages
-    for (let i = 0; i <= 100; i += 20) {
-        await new Promise(resolve => setTimeout(resolve, 200));
-        startupBar.update(i, { stage: `Loading... ${i}%` });
-    }
-    startupBar.stop();
+    try {
+        displayBanner();
+        
+        // Initialize startup progress
+        startupBar.start(100, 0, { stage: 'Initializing...' });
+        
+        // Simulate startup stages
+        for (let i = 0; i <= 100; i += 20) {
+            await new Promise(resolve => setTimeout(resolve, 200));
+            startupBar.update(i, { stage: `Loading... ${i}%` });
+        }
+        startupBar.stop();
 
-    // Set initial status if enabled
-    await client.user.setStatus(config.settings.status.initialStatus); // Use initialStatus from config
-    if (config.settings.status.enabled) {
-        rotateStatus();
-        setInterval(rotateStatus, config.settings.status.interval);
-    }
+        // Initialize settings if needed
+        if (!client.user.settings) {
+            client.user.settings = { all: {} };
+        }
 
-    // Display initial statistics if monitoring enabled
-    const stats = {
-        guilds: client.guilds.cache.size,
-        friends: client.relationships.friendCount,
-        ping: client.ws.ping,
-        ...getSystemStats()
-    };
+        // Safely set initial status if enabled
+        if (config.settings.status.enabled) {
+            try {
+                // Set presence instead of status for better compatibility
+                await client.user.setPresence({
+                    status: config.settings.status.initialStatus,
+                    activities: []
+                }).catch(err => {
+                    advancedLog('warning', `Failed to set initial presence: ${err.message}`, 'box');
+                });
+            } catch (statusError) {
+                advancedLog('warning', `Status setting error: ${statusError.message}`, 'box');
+            }
+        }
 
-    advancedLog('success', `Logged in as ${client.user.tag}`, 'box');
-    advancedLog('stats', `
-        📊 Statistics:
-        ├─ Guilds: ${stats.guilds}
-        ├─ Friends: ${stats.friends}
-        ├─ Ping: ${stats.ping}ms
-        ├─ CPU Usage: ${stats.cpu}%
-        ├─ Memory Usage: ${stats.memory}%
-        └─ Uptime: ${stats.uptime}
-    `, 'box');
+        // Modified status rotation handling
+        if (config.settings.status.enabled && config.settings.status.rotation) {
+            try {
+                rotateStatus();
+                setInterval(rotateStatus, config.settings.status.interval);
+            } catch (rotationError) {
+                advancedLog('warning', `Status rotation error: ${rotationError.message}`, 'box');
+            }
+        }
 
-    // Start monitoring intervals if enabled
-    if (config.settings.monitoring.enabled) {
-        setInterval(() => {
-            const currentStats = {
-                ...getSystemStats(),
-                ping: client.ws.ping
+        // Display initial statistics if monitoring enabled
+        try {
+            const stats = {
+                guilds: client.guilds.cache.size,
+                friends: client.relationships?.friendCount || 0,
+                ping: client.ws.ping,
+                ...getSystemStats()
             };
-            
-            if (config.settings.monitoring.logSystem) {
-                advancedLog('system', `
-                    💻 System Status:
-                    ├─ CPU: ${currentStats.cpu}%
-                    ├─ Memory: ${currentStats.memory}%
-                    ├─ Ping: ${currentStats.ping}ms
-                    └─ Uptime: ${currentStats.uptime}
-                `, 'separator');
+
+            advancedLog('success', `Logged in as ${client.user.tag}`, 'box');
+            advancedLog('stats', `
+                📊 Statistics:
+                ├─ Guilds: ${stats.guilds}
+                ├─ Friends: ${stats.friends}
+                ├─ Ping: ${stats.ping}ms
+                ├─ CPU Usage: ${stats.cpu}%
+                ├─ Memory Usage: ${stats.memory}%
+                └─ Uptime: ${stats.uptime}
+            `, 'box');
+        } catch (statsError) {
+            advancedLog('warning', `Stats collection error: ${statsError.message}`, 'box');
+        }
+
+        // Start monitoring intervals if enabled
+        if (config.settings.monitoring.enabled) {
+            try {
+                setInterval(() => {
+                    try {
+                        const currentStats = {
+                            ...getSystemStats(),
+                            ping: client.ws.ping
+                        };
+                        
+                        if (config.settings.monitoring.logSystem) {
+                            advancedLog('system', `
+                                💻 System Status:
+                                ├─ CPU: ${currentStats.cpu}%
+                                ├─ Memory: ${currentStats.memory}%
+                                ├─ Ping: ${currentStats.ping}ms
+                                └─ Uptime: ${currentStats.uptime}
+                            `, 'separator');
+                        }
+                        
+                        if (config.settings.monitoring.logNetwork) {
+                            monitorConnection();
+                        }
+                    } catch (monitorError) {
+                        advancedLog('warning', `Monitoring error: ${monitorError.message}`, 'box');
+                    }
+                }, config.settings.monitoring.interval);
+            } catch (intervalError) {
+                advancedLog('warning', `Failed to start monitoring: ${intervalError.message}`, 'box');
             }
-            
-            if (config.settings.monitoring.logNetwork) {
-                monitorConnection();
-            }
-        }, config.settings.monitoring.interval);
+        }
+    } catch (error) {
+        advancedLog('error', `
+        ❌ Error Details:
+        ├─ Message: ${error.message}
+        ├─ Name: ${error.name}
+        └─ Stack: ${error.stack}
+        `, 'box');
     }
 });
 
@@ -249,3 +310,17 @@ async function attemptLogin(retries = 3) {
 }
 
 attemptLogin();
+
+// Add error handler for specific user settings error
+client.on('raw', (packet) => {
+    if (packet.t === 'READY') {
+        try {
+            // Force initialize user settings to prevent errors
+            if (!client.user.settings) {
+                client.user.settings = { all: {} };
+            }
+        } catch (e) {
+            advancedLog('warning', `Settings initialization skipped: ${e.message}`, 'box');
+        }
+    }
+});
