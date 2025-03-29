@@ -1,4 +1,8 @@
 :root {
+    --transition-speed: 0.3s;
+}
+
+[data-theme="light"] {
     --primary: #000000;
     --secondary: #666666;
     --accent: #0070f3;
@@ -7,6 +11,17 @@
     --error: #ff0000;
     --success: #00ff00;
     --border: #eaeaea;
+}
+
+[data-theme="dark"] {
+    --primary: #ffffff;
+    --secondary: #a1a1a1;
+    --accent: #0070f3;
+    --background: #111111;
+    --card-bg: #1a1a1a;
+    --error: #ff4444;
+    --success: #44ff44;
+    --border: #333333;
 }
 
 * {
@@ -20,6 +35,7 @@ body {
     background-color: var(--background);
     color: var(--primary);
     line-height: 1.6;
+    transition: background-color var(--transition-speed) ease;
 }
 
 .container {
@@ -33,10 +49,47 @@ header {
     margin-bottom: 2rem;
 }
 
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
 h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    margin-bottom: 0.5rem;
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    color: var(--primary);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.theme-toggle:hover {
+    background-color: var(--border);
+}
+
+.theme-toggle svg {
+    width: 20px;
+    height: 20px;
+    transition: transform var(--transition-speed) ease;
+}
+
+[data-theme="light"] .moon-icon,
+[data-theme="dark"] .sun-icon {
+    display: none;
 }
 
 .lite-badge {
@@ -60,7 +113,7 @@ h1 {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 1rem;
     border: 1px solid var(--border);
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: all var(--transition-speed) ease;
 }
 
 .hidden {
@@ -117,6 +170,8 @@ label {
     border-radius: 4px;
     font-size: 1rem;
     transition: border-color 0.2s ease;
+    background-color: var(--card-bg);
+    color: var(--primary);
 }
 
 .input:focus {
@@ -134,7 +189,7 @@ label {
     font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
-    transition: opacity 0.2s ease, background-color 0.2s ease;
+    transition: opacity 0.2s ease;
 }
 
 .button:hover {
@@ -147,7 +202,7 @@ label {
 }
 
 .info-card {
-    background: var(--background);
+    background: var(--card-bg);
 }
 
 #status-log {

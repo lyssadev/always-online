@@ -16,11 +16,29 @@ class DiscordRPC {
         this.statusDot = document.querySelector('.status-dot');
         this.statusText = document.querySelector('.status-text');
         this.statusLog = document.getElementById('status-log');
+        this.themeToggle = document.getElementById('theme-toggle');
 
         // Bind event listeners
         this.validateButton.addEventListener('click', () => this.validateToken());
         this.connectButton.addEventListener('click', () => this.toggleConnection());
+        this.themeToggle.addEventListener('click', () => this.toggleTheme());
         this.setupFormListeners();
+
+        // Initialize theme
+        this.initializeTheme();
+    }
+
+    initializeTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    }
+
+    toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
     }
 
     setupFormListeners() {
@@ -191,19 +209,13 @@ class DiscordRPC {
     getPresenceData() {
         const type = document.getElementById('activity-type').value;
         const text = document.getElementById('activity-text').value;
-        const largeImage = document.getElementById('large-image').value;
-        const smallImage = document.getElementById('small-image').value;
 
         return {
             status: 'online',
             since: Date.now(),
             activities: [{
                 name: text || 'Always Online LITE',
-                type: this.getActivityType(type),
-                assets: {
-                    large_image: largeImage || undefined,
-                    small_image: smallImage || undefined
-                }
+                type: this.getActivityType(type)
             }],
             afk: false
         };
