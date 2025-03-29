@@ -16,10 +16,9 @@ const client = new Client({
     autoRedeemNitro: false,
     captchaService: 'custom',
     wsEventLimit: 100,
-    patchVoice: false,  // Disable voice patching
-    syncStatus: false,  // Disable status syncing
-    readyTimeout: 30000,  // Increase ready timeout
-    // Disable problematic features
+    patchVoice: false,
+    syncStatus: false,
+    readyTimeout: 30000,
     ws: {
         properties: {
             $browser: 'Discord Client',

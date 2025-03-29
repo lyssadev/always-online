@@ -1,4 +1,4 @@
-# Discord Status Customizer v2.0.5
+# Discord Status Customizer v2.0.7
 
 ⚠️ **DISCLAIMER** ⚠️
 This tool is for educational purposes only. Using selfbots is against Discord's Terms of Service and can result in account termination. Use at your own risk.
@@ -14,6 +14,7 @@ This tool is for educational purposes only. Using selfbots is against Discord's 
 - Rate limit protection with automatic cooldown
 - Token validation and secure login with retries
 - User settings optimization for better stability
+- Rich Presence with custom image support
 
 ### 📊 Monitoring & Visuals
 - CPU, Memory, and Network usage tracking
@@ -78,12 +79,7 @@ npm run dev  # Development mode with auto-restart
 - Memory: 512MB minimum
 - CPU: 1 core minimum
 
-## 📝 Changelog v2.0.5
-- Enhanced user settings handling
-- Improved error recovery system
-- Added connection quality monitoring
-- Improved startup sequence
-- Added detailed logging
-- Fixed stability issues
-- Added automatic retry mechanism
-- Enhanced shutdown process
+## 📝 Changelog v2.0.7
+- Added support for RPC image assets (large and small images)
+- Enhanced status configuration options
+- Updated documentation for RPC features

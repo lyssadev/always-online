@@ -12,8 +12,26 @@ const defaultConfig = {
             interval: 300000, // 5 minutes
             initialStatus: 'online', // Add this line
             options: [
-                { text: '🎮 Gaming', type: 'PLAYING' },
-                { text: '🎵 Music', type: 'LISTENING' },
+                {
+                    text: '🎮 Gaming',
+                    type: 'PLAYING',
+                    assets: {
+                        largeImageURL: 'https://example.com/large-image.png',  // Direct image URL
+                        largeText: 'Large Image Tooltip',
+                        smallImageURL: 'https://example.com/small-image.png',  // Direct image URL
+                        smallText: 'Small Image Tooltip'
+                    }
+                },
+                {
+                    text: '🎵 Music',
+                    type: 'LISTENING',
+                    assets: {
+                        largeImageURL: 'https://example.com/music-large.png',
+                        largeText: 'Now Playing',
+                        smallImageURL: 'https://example.com/music-small.png',
+                        smallText: 'Music Player'
+                    }
+                },
                 { text: '📺 Streaming', type: 'STREAMING' },
                 { text: '🎯 Custom Status', type: 'CUSTOM' }
             ]

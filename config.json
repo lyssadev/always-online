@@ -7,10 +7,34 @@
             "interval": 300000,
             "initialStatus": "online",
             "options": [
-                { "text": "🎮 Gaming", "type": "PLAYING" },
-                { "text": "🎵 Music", "type": "LISTENING" },
-                { "text": "📺 Streaming", "type": "STREAMING" },
-                { "text": "🎯 Custom Status", "type": "CUSTOM" }
+                {
+                    "text": "🎮 Gaming",
+                    "type": "PLAYING",
+                    "assets": {
+                        "largeImageURL": "https://example.com/large-image.png",
+                        "largeText": "Large Image Tooltip",
+                        "smallImageURL": "https://example.com/small-image.png",
+                        "smallText": "Small Image Tooltip"
+                    }
+                },
+                {
+                    "text": "🎵 Music",
+                    "type": "LISTENING",
+                    "assets": {
+                        "largeImageURL": "https://example.com/music-large.png",
+                        "largeText": "Now Playing",
+                        "smallImageURL": "https://example.com/music-small.png",
+                        "smallText": "Music Player"
+                    }
+                },
+                {
+                    "text": "📺 Streaming",
+                    "type": "STREAMING"
+                },
+                {
+                    "text": "🎯 Custom Status",
+                    "type": "CUSTOM"
+                }
             ]
         },
         "monitoring": {
